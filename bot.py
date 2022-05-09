@@ -1,7 +1,7 @@
 import telebot
 from telebot import types
 
-# 5206070667:AAFxwWQPn9DAkkHBZZh3dfZZ5g9vVn2J4ag
+
 
 ticker = ''
 
