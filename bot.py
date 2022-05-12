@@ -73,11 +73,14 @@ def callback_worker(call):
             bot.send_message(call.message.chat.id, f"Такой компании нет в списке")
     elif call.data == "comparison":
         if name_company in ru_price_company:
-            bot.send_message(call.message.chat.id, f"Текущая цена акции {name_company} = {ru_price_company.get(name_company)}")
+            bot.send_message(call.message.chat.id, f"Текущая цена акции {name_company} = "
+                                                   f"{ru_price_company.get(name_company)} рублей")
         elif name_company not in ru_price_company:
             bot.send_message(call.message.chat.id, f"Такой компании нет в списке")
     # bot.send_message(call.message.chat.id, "Введите тикер компании")
     # bot.register_next_step_handler(call.message, reg_ticker)
 
 
-bot.infinity_polling()
+if __name__ == '__main__':
+    bot.polling(none_stop=True)
+
