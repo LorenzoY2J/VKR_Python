@@ -44,12 +44,10 @@ def reg_company(message):
 def callback_worker(call):
     with open("company_ru.json") as file:
         ru_company = json.load(file)
-    with open("company_ru.json") as file:
-        ru_company = json.load(file)
     with open("company_usa.json") as file:
         usa_company = json.load(file)
-    with open("company_usa.json") as file:
-        usa_company = json.load(file)
+    with open("company_price_ru.json") as file:
+        ru_price_company = json.load(file)
     if call.data == "multiplied":
         if name_company in ru_company:
             bot.send_message(call.message.chat.id, f"Див доходность: {ru_company.get(name_company)[0]}")
@@ -74,7 +72,10 @@ def callback_worker(call):
         elif name_company not in ru_company or name_company not in usa_company:
             bot.send_message(call.message.chat.id, f"Такой компании нет в списке")
     elif call.data == "comparison":
-        bot.send_message(call.message.chat.id, "Тут будет сравнение стоимости акции")
+        if name_company in ru_price_company:
+            bot.send_message(call.message.chat.id, f"Текущая цена акции {name_company} = {ru_price_company.get(name_company)}")
+        elif name_company not in ru_price_company:
+            bot.send_message(call.message.chat.id, f"Такой компании нет в списке")
     # bot.send_message(call.message.chat.id, "Введите тикер компании")
     # bot.register_next_step_handler(call.message, reg_ticker)
 
