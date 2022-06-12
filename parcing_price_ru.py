@@ -30,7 +30,9 @@ all_company = soup.find_all("row")
 company_name = {}
 
 for item in all_company:
-    company_name[item.get("shortname")] = item.get("prevprice")
+    if item.get("prevprice") is None:
+        continue
+    company_name[item.get("secid")] = item.get("prevprice")
 
 # Сохраняем список в файл формата json и выводим на печать
 with open("company_price_ru.json", "w") as file:

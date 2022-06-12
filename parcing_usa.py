@@ -2,6 +2,7 @@
 
 from bs4 import BeautifulSoup
 import requests
+from urllib.parse import urlparse
 import json
 
 # Задаем нужный нам url-адрес страницы, откуда берем информацию
@@ -55,7 +56,8 @@ for item in all_company:
         continue
     else:
         for i in companys:
-            company[i] = company_tickers[k:l]
+            a = urlparse(companys.get("href")).path.replace('/company/NASDAQ:', '')
+            company[a] = company_tickers[k:l]
             k += 9
             l += 9
 
@@ -66,6 +68,3 @@ with open("company_usa.json", "w") as file:
 with open("company_usa.json") as file:
     all_company = json.load(file)
 
-# a = input("Введите тикер ")
-#
-# print(all_company.get(a))

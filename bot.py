@@ -12,7 +12,7 @@ bot = telebot.TeleBot(config['Telegram']['token'])
 # Начинаем диалог с пользователем
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
-    bot.send_message(message.from_user.id, "Введите название компании")
+    bot.send_message(message.from_user.id, "Введите тикер компании")
     bot.register_next_step_handler(message, reg_company)
 
 # @bot.message_handler(func=lambda m: True)
@@ -31,12 +31,12 @@ def reg_company(message):
     global name_company
     name_company = message.text
     keyboard = types.InlineKeyboardMarkup()
-    key_multi = types.InlineKeyboardButton(text="Мультипликатор", callback_data='multiplied')
+    key_multi = types.InlineKeyboardButton(text="Мультипликаторы", callback_data='multiplied')
     keyboard.add(key_multi)
-    key_comparison = types.InlineKeyboardButton(text="Сравнение", callback_data='comparison')
+    key_comparison = types.InlineKeyboardButton(text="Стоимость акции", callback_data='comparison')
     keyboard.add(key_comparison)
     question = "Что ты хочешь получить? Мультипликаторы компании " \
-               "или сравнение текущей стоимости с годовым минимумом и максимумом?"
+               "или текущую стоимость?"
     bot.send_message(message.from_user.id, text=question, reply_markup=keyboard)
 
 
@@ -50,6 +50,7 @@ def callback_worker(call):
         ru_price_company = json.load(file)
     if call.data == "multiplied":
         if name_company in ru_company:
+            bot.send_message(call.message.chat.id, f"Текущие мультипликаторы компании {name_company}:")
             bot.send_message(call.message.chat.id, f"Див доходность: {ru_company.get(name_company)[0]}")
             bot.send_message(call.message.chat.id, f"Дивиденд: {ru_company.get(name_company)[1]}")
             bot.send_message(call.message.chat.id, f"P/S: {ru_company.get(name_company)[2]}")
@@ -59,6 +60,7 @@ def callback_worker(call):
             bot.send_message(call.message.chat.id, f"Долг/EBITDA: {ru_company.get(name_company)[6]}")
             bot.send_message(call.message.chat.id, f"ROE%: {ru_company.get(name_company)[7]}")
             bot.send_message(call.message.chat.id, f"ROA%: {ru_company.get(name_company)[8]}")
+            bot.send_message(call.message.chat.id, f"https://telegra.ph/Podrobnee-pro-multiplikatory-06-12")
         elif name_company in usa_company:
             bot.send_message(call.message.chat.id, f"Див доходность: {usa_company.get(name_company)[0]}")
             bot.send_message(call.message.chat.id, f"Дивиденд: {usa_company.get(name_company)[1]}")
@@ -69,6 +71,7 @@ def callback_worker(call):
             bot.send_message(call.message.chat.id, f"Долг/EBITDA: {usa_company.get(name_company)[6]}")
             bot.send_message(call.message.chat.id, f"ROE%: {usa_company.get(name_company)[7]}")
             bot.send_message(call.message.chat.id, f"ROA%: {usa_company.get(name_company)[8]}")
+            bot.send_message(call.message.chat.id, f"https://telegra.ph/Podrobnee-pro-multiplikatory-06-12")
         elif name_company not in ru_company or name_company not in usa_company:
             bot.send_message(call.message.chat.id, f"Такой компании нет в списке")
     elif call.data == "comparison":
@@ -77,8 +80,8 @@ def callback_worker(call):
                                                    f"{ru_price_company.get(name_company)} рублей")
         elif name_company not in ru_price_company:
             bot.send_message(call.message.chat.id, f"Такой компании нет в списке")
-    # bot.send_message(call.message.chat.id, "Введите тикер компании")
-    # bot.register_next_step_handler(call.message, reg_ticker)
+    bot.send_message(call.message.chat.id, "Введите тикер компании")
+    bot.register_next_step_handler(call.message, reg_company)
 
 
 if __name__ == '__main__':
