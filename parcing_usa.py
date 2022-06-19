@@ -57,7 +57,7 @@ for item in all_company:
     else:
         for i in companys:
             a = urlparse(companys.get("href")).path.replace('/company/NASDAQ:', '')
-            company[a] = company_tickers[k:l]
+            company[a] = [i, company_tickers[k:l]]
             k += 9
             l += 9
 
@@ -68,3 +68,4 @@ with open("company_usa.json", "w") as file:
 with open("company_usa.json") as file:
     all_company = json.load(file)
 
+print(all_company)

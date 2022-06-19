@@ -27,12 +27,12 @@ with open("index_price_ru.xml") as file:
 soup = BeautifulSoup(src, "lxml")
 
 all_company = soup.find_all("row")
-company_name = {}
+company_name = dict()
 
 for item in all_company:
     if item.get("prevprice") is None:
         continue
-    company_name[item.get("secid")] = item.get("prevprice")
+    company_name[item.get("secid")] = [item.get("prevprice"), item.get("shortname")]
 
 # Сохраняем список в файл формата json и выводим на печать
 with open("company_price_ru.json", "w") as file:
@@ -41,5 +41,5 @@ with open("company_price_ru.json", "w") as file:
 with open("company_price_ru.json") as file:
     company_name = json.load(file)
 
-print(company_name)
+# print(company_name)
 

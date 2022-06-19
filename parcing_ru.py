@@ -1,4 +1,4 @@
-# Для парсинга нужно установить библиотеки BeautifulSoup и lxml
+# Для парсинга нужно установить библиотеки BeautifulSoup
 
 from bs4 import BeautifulSoup
 import requests
@@ -57,7 +57,7 @@ for item in all_company:
     else:
         for i in companys:
             a = urlparse(companys.get("href")).path.replace('/company/MOEX:', '')
-            company[a] = company_tickers[k:l]
+            company[a] = [i, company_tickers[k:l]]
             # company[i] = company_tickers[k:l]
             k += 9
             l += 9
@@ -70,4 +70,4 @@ with open("company_ru.json") as file:
     all_company = json.load(file)
 
 
-# print(all_company)
+print(all_company)

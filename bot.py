@@ -1,7 +1,7 @@
-import telebot
-from telebot import types
 import json
 from configparser import ConfigParser
+import telebot
+from telebot import types
 
 # Подключаемся к боту через токен
 config = ConfigParser()
@@ -10,10 +10,14 @@ bot = telebot.TeleBot(config['Telegram']['token'])
 
 
 # Начинаем диалог с пользователем
-@bot.message_handler(commands=['start', 'help'])
+@bot.message_handler(commands=['start'])
 def send_welcome(message):
-    bot.send_message(message.from_user.id, "Введите тикер компании")
+    bot.send_message(message.from_user.id, f"Привет, <b>{message.from_user.first_name}</b>! "
+                                           f"Введите тикер интересующей компании."
+                     , parse_mode='html')
+    bot.send_message(message.from_user.id, "Все компании мосбиржи - https://finsovetnik.com/rf/")
     bot.register_next_step_handler(message, reg_company)
+
 
 # @bot.message_handler(func=lambda m: True)
 # def echo_all(message):
@@ -50,40 +54,49 @@ def callback_worker(call):
         ru_price_company = json.load(file)
     if call.data == "multiplied":
         if name_company in ru_company:
-            bot.send_message(call.message.chat.id, f"Текущие мультипликаторы компании {name_company}:")
-            bot.send_message(call.message.chat.id, f"Див доходность: {ru_company.get(name_company)[0]}")
-            bot.send_message(call.message.chat.id, f"Дивиденд: {ru_company.get(name_company)[1]}")
-            bot.send_message(call.message.chat.id, f"P/S: {ru_company.get(name_company)[2]}")
-            bot.send_message(call.message.chat.id, f"P/BV: {ru_company.get(name_company)[3]}")
-            bot.send_message(call.message.chat.id, f"P/E: {ru_company.get(name_company)[4]}")
-            bot.send_message(call.message.chat.id, f"EV/EBITDA: {ru_company.get(name_company)[5]}")
-            bot.send_message(call.message.chat.id, f"Долг/EBITDA: {ru_company.get(name_company)[6]}")
-            bot.send_message(call.message.chat.id, f"ROE%: {ru_company.get(name_company)[7]}")
-            bot.send_message(call.message.chat.id, f"ROA%: {ru_company.get(name_company)[8]}")
-            bot.send_message(call.message.chat.id, f"https://telegra.ph/Podrobnee-pro-multiplikatory-06-12")
+            bot.send_message(call.message.chat.id, f"Текущие мультипликаторы компании "
+                                                   f"<b>{ru_company.get(name_company)[0]}</b>:\n"
+                                                   f"* Див доходность: {ru_company.get(name_company)[1][0]}%\n"
+                                                   f"* Дивиденд: {ru_company.get(name_company)[1][1]} рублей\n"
+                                                   f"* P/E: {ru_company.get(name_company)[1][4]}\n"
+                                                   f"* P/S: {ru_company.get(name_company)[1][2]}\n"
+                                                   f"* P/BV: {ru_company.get(name_company)[1][3]}\n"
+                                                   f"* EV/EBITDA: {ru_company.get(name_company)[1][5]}\n"
+                                                   f"* Долг/EBITDA: {ru_company.get(name_company)[1][6]}\n"
+                                                   f"* ROE%: {ru_company.get(name_company)[1][7]}%\n"
+                                                   f"* ROA%: {ru_company.get(name_company)[1][8]}%\n"
+                                                   f"https://telegra.ph/Podrobnee-pro-multiplikatory-06-12",
+                             parse_mode='html')
         elif name_company in usa_company:
-            bot.send_message(call.message.chat.id, f"Див доходность: {usa_company.get(name_company)[0]}")
-            bot.send_message(call.message.chat.id, f"Дивиденд: {usa_company.get(name_company)[1]}")
-            bot.send_message(call.message.chat.id, f"P/S: {usa_company.get(name_company)[2]}")
-            bot.send_message(call.message.chat.id, f"P/BV: {usa_company.get(name_company)[3]}")
-            bot.send_message(call.message.chat.id, f"P/E: {usa_company.get(name_company)[4]}")
-            bot.send_message(call.message.chat.id, f"EV/EBITDA: {usa_company.get(name_company)[5]}")
-            bot.send_message(call.message.chat.id, f"Долг/EBITDA: {usa_company.get(name_company)[6]}")
-            bot.send_message(call.message.chat.id, f"ROE%: {usa_company.get(name_company)[7]}")
-            bot.send_message(call.message.chat.id, f"ROA%: {usa_company.get(name_company)[8]}")
-            bot.send_message(call.message.chat.id, f"https://telegra.ph/Podrobnee-pro-multiplikatory-06-12")
+            bot.send_message(call.message.chat.id, f"Текущие мультипликаторы компании "
+                                                   f"<b>{usa_company.get(name_company)[0]}</b>:\n"
+                                                   f"* Див доходность: {usa_company.get(name_company)[1][0]}%\n"
+                                                   f"* Дивиденд: {usa_company.get(name_company)[1][1]}$\n"
+                                                   f"* P/E: {usa_company.get(name_company)[1][4]}\n"
+                                                   f"* P/S: {usa_company.get(name_company)[1][2]}\n"
+                                                   f"* P/BV: {usa_company.get(name_company)[1][3]}\n"
+                                                   f"* EV/EBITDA: {usa_company.get(name_company)[1][5]}\n"
+                                                   f"* Долг/EBITDA: {usa_company.get(name_company)[1][6]}\n"
+                                                   f"* ROE%: {usa_company.get(name_company)[1][7]}%\n"
+                                                   f"* ROA%: {usa_company.get(name_company)[1][8]}%\n"
+                                                   f"https://telegra.ph/Podrobnee-pro-multiplikatory-06-12",
+                             parse_mode='html')
         elif name_company not in ru_company or name_company not in usa_company:
-            bot.send_message(call.message.chat.id, f"Такой компании нет в списке")
+            bot.send_message(call.message.chat.id,
+                             f"Такой компании нет в списке или вы набрали название компании, а не ее тикер")
+            bot.send_message(call.message.chat.id, "Все компании мосбиржи - https://finsovetnik.com/rf/")
     elif call.data == "comparison":
         if name_company in ru_price_company:
-            bot.send_message(call.message.chat.id, f"Текущая цена акции {name_company} = "
-                                                   f"{ru_price_company.get(name_company)} рублей")
+            bot.send_message(call.message.chat.id, f"Текущая цена акции компании "
+                                                   f"<b>{ru_price_company.get(name_company)[1]}</b> = "
+                                                   f"{ru_price_company.get(name_company)[0]} рублей", parse_mode='html')
         elif name_company not in ru_price_company:
-            bot.send_message(call.message.chat.id, f"Такой компании нет в списке")
+            bot.send_message(call.message.chat.id,
+                             f"Такой компании нет в списке или вы набрали название компании, а не ее тикер")
+            bot.send_message(call.message.chat.id, "Все компании мосбиржи - https://finsovetnik.com/rf/")
     bot.send_message(call.message.chat.id, "Введите тикер компании")
     bot.register_next_step_handler(call.message, reg_company)
 
 
 if __name__ == '__main__':
     bot.polling(none_stop=True)
-
