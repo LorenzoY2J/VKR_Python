@@ -23,13 +23,6 @@ def send_welcome(message):
     bot.register_next_step_handler(message, reg_company)
 
 
-# @bot.message_handler(func=lambda m: True)
-# def echo_all(message):
-#     if message.text == "/start":
-#         bot.send_message(message.from_user.id, "Введите название компании")
-#         bot.register_next_step_handler(message, reg_company)
-
-
 # Создаем переменную, куда будем сохранять компанию, которую введет пользователь
 name_company = ''
 
@@ -51,7 +44,7 @@ def reg_company(message):
 @bot.callback_query_handler(func=lambda call: True)
 def callback_worker(call):
     if call.data == "multiplied":
-        parcing_ru.parcing_milti()
+        parcing_ru.parcing_multi()
         with open("company_ru.json") as file:
             ru_company = json.load(file)
         # Тестирование выдачи всех компаний из списка мультипликаторов
@@ -76,7 +69,7 @@ def callback_worker(call):
         elif name_company not in ru_company:
             ticker_help_2 = types.InlineKeyboardMarkup()
             ticker_help_2.add(types.InlineKeyboardButton("Все компании мосбиржи",
-                                                       url='https://finsovetnik.com/rf/'))
+                                                         url='https://finsovetnik.com/rf/'))
             bot.send_message(call.message.chat.id,
                              f"Такой компании нет в списке или вы набрали название компании, а не ее тикер"
                              , reply_markup=ticker_help_2)
@@ -94,12 +87,17 @@ def callback_worker(call):
         elif name_company not in ru_price_company:
             ticker_help_3 = types.InlineKeyboardMarkup()
             ticker_help_3.add(types.InlineKeyboardButton("Все компании мосбиржи",
-                                                       url='https://finsovetnik.com/rf/'))
+                                                         url='https://finsovetnik.com/rf/'))
             bot.send_message(call.message.chat.id,
                              f"Такой компании нет в списке или вы набрали название компании, а не ее тикер"
                              , reply_markup=ticker_help_3)
     bot.send_message(call.message.chat.id, "Введите тикер компании")
     bot.register_next_step_handler(call.message, reg_company)
+
+
+@bot.message_handler(func=lambda m: True)
+def echo_all(call):
+    bot.send_message(call.from_user.id, "Нажми на кнопку Мультипликаторы или Стоимость акции выше")
 
 
 if __name__ == '__main__':

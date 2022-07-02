@@ -5,8 +5,8 @@ import requests
 from urllib.parse import urlparse
 import json
 
-def parcing_milti():
 
+def parcing_multi():
     # Задаем нужный нам url-адрес страницы, откуда берем информацию
     url = "https://porti.ru/search/stock?name=&p%5Bcountry%5D=0&exchange=MOEX&category=0&is_filled=on&p%5Bmarket_cap%5D=10%2C10000"
 
@@ -51,7 +51,6 @@ def parcing_milti():
     # их тикеры
     company = {}
     k, l = 0, 9
-
 
     for item in all_company:
         companys = item.find("a")

@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
+
 def parcing_price():
     # Задаем нужный нам url-адрес страницы, откуда берем информацию
     url = "https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities.xml"
@@ -38,10 +39,10 @@ def parcing_price():
     with open("company_price_ru.json", "w") as file:
         json.dump(company_name, file, indent=4, ensure_ascii=False)
 
+
 with open("company_price_ru.json") as file:
     company_name = json.load(file)
 
 # for items in company_name:
 #     print(items)
 # print(company_name)
-
